@@ -8,6 +8,9 @@
 	},
 	"dependencies": {
 		"nativescript-theme-core": "~1.0.4",
-		"tns-core-modules": "~3.4.0"
+		"tns-core-modules": "~3.4.0",
+		"nativescript-accelerometer": "^2.0.1",
+		"nativescript-socket.io": "^0.9.0",
+		"nativescript-vibrate": "^2.0.1"
 	}
 }
