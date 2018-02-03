@@ -1,5 +1,6 @@
 var SocketIO = require('nativescript-socket.io');
 var Observable = require("data/observable").Observable;
+var geolocation = require("nativescript-geolocation");
 
 let socketio = null;
 
@@ -31,6 +32,10 @@ function getMessage(counter) {
     }
 }
 
+function sendCoord(coords) {
+    socketio.emit("test", {connection : coords});
+}
+
 function createViewModel() {
     var viewModel = new Observable();
     viewModel.counter = 42;
@@ -38,6 +43,15 @@ function createViewModel() {
 
     viewModel.onTapConnect = function() {
         connect();
+    }
+
+    viewModel.onTapSendMsg = function() {
+        geolocation.getCurrentLocation({desiredAccuracy: 3, updateDistance: 10, maximumAge: 20000, timeout: 20000}).then(function (data){
+            console.log(require('util').inspect(data, { depth: null }));
+            let newData = {Latitude : data.latitude, Longitude : data.longitude, Speed : data.speed, Directon : data.directon, TimeStamp : data.timestamp};
+            console.dir(newData);
+            //sendCoord();
+        });       
     }
 
     return viewModel;
