@@ -26,6 +26,6 @@ https://docs.nativescript.org/ui/components.
     -->
     <StackLayout class="p-20">
         <Button text="Connect" tap="{{ onTapConnect }}" class="btn btn-primary btn-active"/>
-        <Button text="Send Data" tap="{{ onTap }}" class="btn btn-primary btn-active"/>
+        <Button text="Send Location" tap="{{ onTapSendMsg }}" class="btn btn-primary btn-active"/>
     </StackLayout>
 </Page>
