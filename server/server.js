@@ -8,6 +8,7 @@ console.log('Server started');
 const io = require('socket.io').listen(server);
 let allClients = [];
 
+
 io.sockets.on('connection',
   function (socket) {
     allClients.push(socket.id);
