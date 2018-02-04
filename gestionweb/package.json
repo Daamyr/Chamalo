@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "google-map-react": "^0.29.0",
     "google-maps-react": "^1.1.2",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
+    "react-pure-render": "^1.0.2",
     "react-scripts": "1.1.0",
+    "react-toggle": "^4.0.2",
     "socket.io-client": "^2.0.4"
   },
   "scripts": {
