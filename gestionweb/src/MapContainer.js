@@ -168,6 +168,17 @@ export default class MapContainer extends Component {
     this.setState({toggleDefib: !this.state.toggleDefib});
   }
 
+
+  dropdown = () => {
+    let whtml = [];
+    for (let client of this.state.listClient) {
+      whtml.push(<div id="dropdown"><button id="dropbtn">{client.name}</button><div id="dropdown-content"><a href="#">Latitude: {client.coords.lat}</a><a href="#">Longitude: {client.coords.lng}</a></div></div>);
+      whtml.push(<br/>)
+    }
+    console.dir(whtml);
+    return whtml;
+  }
+
   render() {
 
 
@@ -206,11 +217,7 @@ export default class MapContainer extends Component {
     return (
         <div id="MapLog">
             <div id="MapLeft">
-              <label>
-                <ul>
-                  {this.state.listClient.map((item)=><li key={item.id}>{item.name}</li>)}
-                </ul>
-              </label>
+              {this.dropdown()}
             </div>
             <div id="MapCenter">
 

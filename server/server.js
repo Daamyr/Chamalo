@@ -74,7 +74,7 @@ function verifyUserConnectRequest(token, username, password, socket) {
         if (gestionnaire.username === username && gestionnaire.password === password) {
           console.log("Added as gestion");
           socket.emit('connectack', {connection: "Connected"});
-          gestionClients = [{id: socket}];
+          gestionClients.push({id: socket});
           console.log("Gestion connected");
           console.log("Client: " + socket.id);
         } else {
@@ -133,9 +133,9 @@ io.sockets.on('connection',
             mobile.direction = data.Direction;
             mobile.timestamp = data.TimeStamp;
             console.log("Received: 'test' " + mobile.coords.lat + " " + mobile.coords.lng + " " + mobile.speed + " " + mobile.direction + " " + mobile.timestamp + " " + socket.id);
+            io.to(mobile.token).emit('gestion:coords', mobileClients);
           }
         }
-        gestionClients[0].id.emit('gestion:coords', mobileClients);
     });
 
     socket.on('forceDisconnect', function(){
@@ -151,21 +151,21 @@ io.sockets.on('connection',
   }
 );
 
-// setInterval(sendCoord, 5000);
+setInterval(sendCoord, 5000);
 
-// function sendCoord() {
-//   gestionClients[0];
-//   console.log("Sending stuff");
-//   for (client of gestionClients) {
-//     for (mobile of mobileClients) {
-//       if (mobile.token != client.token) {
-//         delete mobile;
-//       }
-//     }
-//     // io.to('prod').emit('gestion:coords', mobileClients);
-//   }
-//   gestionClients[0].id.emit('gestion:coords', mobileClients);
-// }
+function sendCoord() {
+  gestionClients[0];
+  console.log("Sending stuff");
+  for (client of gestionClients) {
+    for (mobile of mobileClients) {
+      if (mobile.token != client.token) {
+        delete mobile;
+      }
+    }
+    io.to(client.token).emit('gestion:coords', mobileClients);
+  }
+  // gestionClients[0].id.emit('gestion:coords', mobileClients);
+}
 
 function allClients2str() {
   let str = "";
