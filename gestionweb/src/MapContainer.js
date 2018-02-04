@@ -45,6 +45,7 @@ export default class MapContainer extends Component {
                     {id: 444, name: "Noir", coords: {lat: 46.545732, lng: -72.149542}}
                     ],
       listDefib: [],
+      listPoI: [],
       page : "asd",
       selectedLang: "fr",
       lang: {
@@ -85,7 +86,7 @@ export default class MapContainer extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
 
-  
+
 
     // condition(){
     //   if(this.state.toggleDefib){
@@ -96,10 +97,28 @@ export default class MapContainer extends Component {
     //   }
     // }
 
+    componentDidUpdate(prevProps) {
+    const { maps } = this.props
+
+    if (maps.mapInstance !== prevProps.maps.mapInstance) {
+      if (this.marker) {
+        this.marker.setMap(null)
+      }
+      this.renderMarker()
+    }
+
+    // Update marker visibiliy
+    if (this.marker && this.props.visible !== this.marker.visible) {
+      this.marker.setMap(null)
+      this.renderMarker()
+    }
+  }
+
+
   render() {
 
 
-    var data = new Geo().Geo();
+    var data = new Geo().DEAGeo();
     data.features.map((feature)=>
       this.state.listDefib.push({
                         id: Math.random()*100,
@@ -113,6 +132,22 @@ export default class MapContainer extends Component {
                       }
 
         ));
+    var data = new Geo().PoIGeo();
+    data.features.map((feature)=>
+      this.state.listPoI.push({
+                        id: Math.random()*200,
+                        description:'point of interest',
+                        class:feature.properties.fclass,
+                        name:feature.properties.name,
+                        address: feature.properties.Adresse,
+                        coords:
+                          {
+                            lat: feature.geometry.coordinates[1],
+                            lng: feature.geometry.coordinates[0]
+                          }
+                      }
+
+      ));
 
 
     return (
@@ -132,11 +167,14 @@ export default class MapContainer extends Component {
                 zoom={this.props.zoom}>
                 {this.state.listClient.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
 
-                {this.state.listDefib.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
+                
                  
                 
+                {this.state.listDefib.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
+
+                
+                {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
               </GoogleMap>
-                }
 
             </div>
             <div id="MapRight">
