@@ -45,7 +45,7 @@ function createViewModel() {
         //console.log(viewModel.username)
         connect(viewModel.username, viewModel.token);
         var navigationOptions={
-            moduleName:'Pages/main-page',
+            moduleName:'./Pages/main-page',
             context:{socket: socketio,
                 token : viewModel.token
                 },

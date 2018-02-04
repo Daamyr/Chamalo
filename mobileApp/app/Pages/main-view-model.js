@@ -131,6 +131,21 @@ function isInDanger(){
     inactive = true;
     inactivityCounter = 0;
     isDead = true;
+
+    var navigationOptions={
+        moduleName:'./Pages/danger-page',
+        context:{socket: socketio
+           
+            },
+        animated: true,
+        transition: {
+            name: "slideRight",
+            duration: 380,
+            curve: "easeIn"
+        },
+        clearHistory: true
+    }
+    frameModule.topmost().navigate(navigationOptions);
 }
 
 function startAccel() {
@@ -185,17 +200,32 @@ function createViewModel(params) {
     viewModel.onNavBtnTap = function() {
         dialogs.prompt({
         title: "Attention",
-        message: "Entrez votre clef secrète pour vous déconecter",
+        message: "Entrez votre clé secrète pour vous déconecter",
         okButtonText: "Entrer",
         cancelButtonText: "Annuler",
         inputType: dialogs.inputType.password
         }).then(function (r) {
             if(r.result == true && r.text == params.token){
-                
+                console.log("GOING BACK TO LOGIN");
+                stopAccel();
+                var navigationOptions={
+                    moduleName:'./Pages/login-page',
+                    context:{socket: socketio,
+                        token : viewModel.token
+                        },
+                    animated: true,
+                    transition: {
+                        name: "slideRight",
+                        duration: 380,
+                        curve: "easeIn"
+                    },
+                    clearHistory: true
+                }
+                frameModule.topmost().navigate(navigationOptions);
             } else if(r.result == true && r.text != params.token){
                 dialogs.alert({
                 title: "Message",
-                message: "La clef secrète est incorrecte",
+                message: "La clé secrète est incorrecte",
                 okButtonText: "Réessayer"
                 }).then(function () {});
             } else{

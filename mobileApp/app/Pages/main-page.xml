@@ -30,7 +30,5 @@ https://docs.nativescript.org/ui/components.
     core theme, such as p-20, btn, h2, and text-center. You can view a full list of the
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
-    <StackLayout class="p-20">
-        <Button text="Send Location" tap="{{ onTapSendMsg }}" class="btn btn-primary btn-active"/>        
-    </StackLayout>
+
 </Page>
