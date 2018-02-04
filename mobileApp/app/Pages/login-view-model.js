@@ -14,7 +14,7 @@ function onNavigatingTo(args) {
 
 
 
-function connect(user, token) {
+function connect(vm) {
     console.log("Connection request");
     try {
       if (socketio != null) {
@@ -22,11 +22,26 @@ function connect(user, token) {
         socketio.emit("forceDisconnect");
         socketio = null;
       }
-      socketio = SocketIO.connect('http://138.197.172.107:8081?token=' + token + '&id=1&username=' + user);
+      socketio = SocketIO.connect('http://138.197.172.107:8081?token=' + vm.token + '&id=1&username=' + vm.username);
       //socketio.emit("Id" , {Id : 1});
-      /*socketio.on("reconnect", function(){
-        socketio.emit("Id" , {Id : 1});
-      });*/
+      socketio.on("connectack", function(){
+        console.log("PASSED IN HERE COOL POUAIN EYS");
+         var navigationOptions={
+            moduleName:'./Pages/main-page',
+            context:{socket: socketio,
+                token : vm.token
+                },
+            animated: true,
+            transition: {
+                name: "slide",
+                duration: 380,
+                curve: "easeIn"
+            },
+            clearHistory: true
+        }
+        frameModule.topmost().navigate(navigationOptions);
+        //socketio.emit("Id" , {Id : 1});
+      });
 
     } catch (e) {
       console.log(e);
@@ -43,21 +58,7 @@ function createViewModel() {
 
     viewModel.onTap  = function() {
         //console.log(viewModel.username)
-        connect(viewModel.username, viewModel.token);
-        var navigationOptions={
-            moduleName:'./Pages/main-page',
-            context:{socket: socketio,
-                token : viewModel.token
-                },
-            animated: true,
-            transition: {
-                name: "slide",
-                duration: 380,
-                curve: "easeIn"
-            },
-            clearHistory: true
-        }
-        frameModule.topmost().navigate(navigationOptions);
+        connect(viewModel);
     }
 
     return viewModel;
