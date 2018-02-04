@@ -269,24 +269,36 @@ export default class MapContainer extends Component {
 
             </div>
             <div id="MapRight">
-              <label>
-              <Toggle
-                defaultChecked={this.state.toggleClient}
-                onChange={this.handleBaconChange} />
-              <span id="Toggle">Agents</span>
-              </label><br/>
-              <label>
-              <Toggle
-                defaultChecked={this.state.toggleDefib}
-                onChange={this.handleBaconChangeDefib} />
-              <span id="Toggle">DEA</span>
-              </label>
-              <label>
-              <Toggle
-                defaultChecked={this.state.togglePoI}
-                onChange={this.handleBaconChangePoI} />
-              <span id="Toggle">Points d'intérêts</span>
-              </label>
+            <ul>
+              <li>
+                <label>
+                  <Toggle
+                  defaultChecked={this.state.toggleClient}
+                  onChange={this.handleBaconChange} />
+                  <span id="Toggle">Agents</span>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <Toggle
+                  defaultChecked={this.state.toggleDefib}
+                  onChange={this.handleBaconChangeDefib} />
+                  <span id="Toggle">DEA</span>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <Toggle
+                  defaultChecked={this.state.togglePoI}
+                  onChange={this.handleBaconChangePoI} />
+                  <span id="Toggle">Points d'intérêts</span>
+                </label>
+              </li>
+            </ul>
+              
+              
             </div>
         </div>
       );

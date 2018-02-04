@@ -17,7 +17,7 @@ class App extends Component {
   constructor(){
     super();
     this.socketio = null;
-    this.name = "LE NOM";
+    this.name = "Chamalo";
     this.state = {
       page : "login",
       username : "",
@@ -136,7 +136,7 @@ class App extends Component {
     return (
       <div className="AppLog">
         <header className="AppLog-header">
-          <h1 className="AppLog-title">Welcome to LE NOM</h1>
+          <h1 className="AppLog-title">Welcome to Chamalo</h1>
         </header>
         <MapContainer
           mySocket={this.socketio}

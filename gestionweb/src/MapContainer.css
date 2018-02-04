@@ -82,6 +82,10 @@
   z-index: -1;
 }
 
+#MapRight{
+  text-align: left;
+}
+
 body{
   background-color: #efffff;
 }
