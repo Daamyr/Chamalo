@@ -60,28 +60,50 @@ const io = require('socket.io').listen(server);
 let gestionClients = [];
 let mobileClients = [];
 
+function verifyUserConnectRequest(token, username, password, socket) {
+  store.list(function(err, objects) {
+    // err if there was trouble reading the file system
+    if (err) throw err;
+    // objects is an array of JS objects sorted by name, one per JSON file
+    console.log(objects);
+    let content = objects[0].content;
+    for (gestionnaire of content) {
+      if(gestionnaire.token == token) {
+        console.log("Check");
+        if (gestionnaire.username === username && gestionnaire.password === password) {
+          console.log("Added as gestion");
+          socket.emit('connectack', {connection: "Connected"});
+          gestionClients.push({id: socket.id});
+          console.log("Gestion connected");
+          console.log("Client: " + socket.id);
+        } else {
+          socket.disconnect();
+        }
+      }
+    }
+  });
+}
+
 io.sockets.on('connection',
   function (socket) {
     let token = socket.handshake.query.token;
     let username = socket.handshake.query.username;
     let password = socket.handshake.query.password;
-
+    let id = socket.handshake.query.id;
+    if (id == 1) {
+      console.log("Added as mobile");
+      mobileClients.push({id: socket.id});
+      socket.emit('connectack', {connection: "Connected"});
+      console.log("Mobile connected");
+      console.log("Client: " + socket.id);
+    } else {
+      verifyUserConnectRequest(token, username, password, socket);
+    }
     socket.join(token);
-    console.log(token + " | " + username + " | " + password);
+    console.log(token + " | " + username + " | " + password + " | " + id);
     // console.log("Il y a "+allClients.length+" clients connectés");
-    console.log("Client: " + socket.id);
-    socket.emit('connectack', {connection: "Connected"});
 
-    socket.on('Id',
-      function(data) {
-        console.log("Received: 'Id' " + data.Id + " " + socket.id);
-        if (data.Id == 1) {
-          console.log("Added");
-          mobileClients.push({id: socket.id});
-        } else {
-          gestionClients.push({id: socket.id});
-        }
-    });
+
 
     socket.on('test',
       function(data) {

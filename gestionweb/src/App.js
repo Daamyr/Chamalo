@@ -8,7 +8,6 @@ import SocketIO from 'socket.io-client';
 // let socketio = null;
 
 class App extends Component {
-
   componentDidMount(){
     console.log("Hello" + this.socketio);
   }
@@ -16,97 +15,86 @@ class App extends Component {
   constructor(){
     super();
     this.socketio = null;
-
     this.state = {
       page : "login",
       username : "",
       password : "",
     }
-
   }
 
-  handleChange (event) {
-      console.log(event.target.value);
-      this.setState({username: event.target.value});
-    }
+  handleChange = (event) => {
+    this.setState({username: event.target.value});
+  }
 
-    setPage = (page) => {
-      this.setState({ page })
-    }
+  handleChangePass = (event) => {
+    this.setState({password: event.target.value});
+  }
 
-  connect() {
-      console.log("Connection request");
-      try {
-        if (this.socketio != null) {
-          console.log("not null");
-          this.socketio.emit("forceDisconnect");
-          this.socketio = null;
-        }
+  setPage = (page) => {
+    this.setState({ page })
+  }
 
-        this.socketio = SocketIO.connect('http://138.197.172.107:8081?token=prod&username='+ this.state.username +'&password='+ this.state.username);
-
-        console.log(this.socketio);
-
-        this.socketio.emit("Id", {"Id":0});
-
-        this.socketio.on('gestion:coords',
-          function (data){
-            let latitude = data.Latitude;
-            let longitude = data.Longitude;
-            let speed = data.Speed;
-            let direction = data.Direction;
-            let timestamp = data.TimeStamp;
-            console.log(latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp);
-          });
-
-        this.socketio.on('reconnect',
-          function(){
-            console.log("allo reco");
-            this.socketio.emit("Id", {"Id":0});
-          });
-
-        let vm = this;
-        this.socketio.on('connectack',
-          function(){
-            console.log("Auth ok");
-            vm.setPage("normal");//-----------------------------------------
-          });
-
-      } catch (e) {
-        console.log(e);
-      } finally {
-          
+  connect = () => {
+    console.log("Connection request");
+    try {
+      if (this.socketio != null) {
+        console.log("not null");
+        this.socketio.emit("forceDisconnect");
+        this.socketio = null;
       }
-  }
-    
 
-  test(){
-    if(!this.socketio.connected){
+      this.socketio = SocketIO.connect('http://138.197.172.107:8081?token=prod&id=0&username='+ this.state.username +'&password='+ this.state.password);
+
+      this.socketio.on('gestion:coords',
+        function (data){
+          let latitude = data.Latitude;
+          let longitude = data.Longitude;
+          let speed = data.Speed;
+          let direction = data.Direction;
+          let timestamp = data.TimeStamp;
+          console.log(latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp);
+        });
+
+      let vm = this;
+      this.socketio.on('connectack',
+        function(){
+          console.log("Auth ok");
+          vm.setPage("normal");//-----------------------------------------
+        });
+    } catch (e) {
+      console.log(e);
+    } finally {
+
+    }
+  }
+
+  test() {
+    if(!this.socketio.connected) {
       alert("you're not connected");
-       }else{
+    } else {
     this.socketio.emit("test", {"connection":{"prenom":"Maxime", "nom":"Damour"}});
-}
-
+    }
   }
+
   render() {
-  if(this.state.page === 'login'){
+    if(this.state.page === 'login') {
       return (
         <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <input id="username"
-        type="text"
-        value={this.state.username}
-        onChange={this.handleChange}
-        />
-        <input  id="password"
-        type="password"
-        value={this.state.password}
-        onChange={this.handleChange}
-        />
-        <button onClick={() => this.connectFromLogin()}>Connection</button>
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Welcome to React</h1>
+          </header>
+          <input id="username"
+          type="text"
+          value={this.state.username}
+          onChange={this.handleChange}
+          />
+          <input  id="password"
+          type="password"
+          value={this.state.password}
+          onChange={this.handleChangePass}
+          />
+          <button onClick={() => this.connect()}>Connection</button>
         </div>
         );
     }
@@ -130,4 +118,3 @@ class App extends Component {
 }
 
 export default App;
-
