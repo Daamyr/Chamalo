@@ -85,9 +85,10 @@ export default class MapContainer extends Component {
     this.state = {
       toggleClient: true,
       toggleDefib: true,
-      listClient: [ {id: 123, name: "Paul", coords: {lat: 46.545732, lng: -72.249542}},
-                    {id: 111, name: "Bleu", coords: {lat: 46.545732, lng: -72.349542}},
-                    {id: 444, name: "Noir", coords: {lat: 46.545732, lng: -72.149542}}
+      listClient: [
+        // {id: 123, name: "Paul", coords: {lat: 46.545732, lng: -72.249542}},
+                    // {id: 111, name: "Bleu", coords: {lat: 46.545732, lng: -72.349542}},
+                    // {id: 444, name: "Noir", coords: {lat: 46.545732, lng: -72.149542}}
                     ],
       listDefib: [],
       listPoI: [],
@@ -172,8 +173,10 @@ export default class MapContainer extends Component {
   dropdown = () => {
     let whtml = [];
     for (let client of this.state.listClient) {
-      whtml.push(<div id="dropdown"><button id="dropbtn">{client.name}</button><div id="dropdown-content"><a href="#">Latitude: {client.coords.lat}</a><a href="#">Longitude: {client.coords.lng}</a></div></div>);
-      whtml.push(<br/>)
+      if (!(client.coords.lat < -70)) {
+        whtml.push(<div id="dropdown"><button id="dropbtn">{client.name}</button><div id="dropdown-content"><a href="#">Latitude: {client.coords.lat}</a><a href="#">Longitude: {client.coords.lng}</a></div></div>);
+        whtml.push(<br/>)
+      }
     }
     console.dir(whtml);
     return whtml;
