@@ -4,13 +4,16 @@ of which NativeScript renders with a platform-specific iOS or Android native con
 You can find a full list of user interface components you can use in your app at
 https://docs.nativescript.org/ui/components.
 -->
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="onNavigatingTo" class="page">
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="onNavigatingTo"
+    navigatedFrom="onNavigatedFrom"
+    navigatedTo="onNavigatedTo"
+    navigatingFrom="onNavigatingFrom" class="page">
     <!--
     The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
     http://docs.nativescript.org/ui/action-bar
     -->
     <Page.actionBar>
-        <ActionBar title="My App" icon="" class="action-bar">
+        <ActionBar title="                   Hackathon 2K18" icon="" class="action-bar">
         </ActionBar>
     </Page.actionBar>
     <!--
@@ -23,9 +26,10 @@ https://docs.nativescript.org/ui/components.
     These components make use of several CSS class names that are part of the NativeScript
     core theme, such as p-20, btn, h2, and text-center. You can view a full list of the
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
-    -->
-    <StackLayout class="p-20">
-        <Button text="Connect" tap="{{ onTapConnect }}" class="btn btn-primary btn-active"/>
-        <Button text="Send Location" tap="{{ onTapSendMsg }}" class="btn btn-primary btn-active"/>
+-->
+    <StackLayout class="text-center">
+        <TextField text="{{ username }}" hint="Identifiant" />
+        <TextField text="{{ token }}" hint="Clé Secrète" />
+        <Button text="Connect" tap="{{ onTap }}" class="btn btn-primary btn-active"/>
     </StackLayout>
 </Page>
