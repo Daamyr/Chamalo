@@ -2,12 +2,27 @@ const http = require('http');
 const _ = require('lodash');
 
 var store = require('json-fs-store')();
+let dataStored;
 
-// store.add({id: "data", content: [{token: "prod", name: "Paul", username: "user", password: "pass"}]}, function(err) {
-//   // called when the file has been written
-//   // to the /path/to/storage/location/12345.json
-//   if (err) throw err; // err if the save failed
-// });
+function modifyObject(tokenToChange, keyToChange, value) {
+  for (gestionnaire of dataStored) {
+    if(gestionnaire.token == tokenToChange) {
+      gestionnaire.keyToChange = value;
+    }
+  }
+
+  store.add(dataStored, function(err) {
+    // called when the file has been written
+    // to the /path/to/storage/location/12345.json
+    if (err) throw err; // err if the save failed
+  });
+}
+
+store.add({token: "prod", name: "Paul"}, function(err) {
+  // called when the file has been written
+  // to the /path/to/storage/location/12345.json
+  if (err) throw err; // err if the save failed
+});
 
 store.load("data", function(err, object){
   if(err) throw err; // err if JSON parsing failed
@@ -20,36 +35,11 @@ store.list(function(err, objects) {
   // err if there was trouble reading the file system
   if (err) throw err;
   // objects is an array of JS objects sorted by name, one per JSON file
+  dataStored = objects;
   console.log(objects);
 });
 
-
-function modifyObject(tokenToChange, keyToChange, value) {
-  store.list(function(err, objects) {
-    // err if there was trouble reading the file system
-    if (err) throw err;
-    // objects is an array of JS objects sorted by name, one per JSON file
-    let content = objects[0].content;
-    for (gestionnaire of content) {
-      if(gestionnaire.token == tokenToChange) {
-        console.log("yes");
-        gestionnaire[keyToChange] = value;
-      }
-    }
-
-    console.log(objects[0].content[0].name);
-
-    store.remove('data', function(err) {});
-
-    store.add(objects[0], function(err) {
-      // called when the file has been written
-      // to the /path/to/storage/location/12345.json
-      if (err) throw err; // err if the save failed
-    });
-  });
-}
-
-// modifyObject("prod", "name", "Paul");
+// modifyObject()
 
 const server = http.createServer();
 server.listen(8081);
@@ -60,14 +50,12 @@ const io = require('socket.io').listen(server);
 let gestionClients = [];
 let mobileClients = [];
 
+
 io.sockets.on('connection',
   function (socket) {
     let token = socket.handshake.query.token;
-    let username = socket.handshake.query.username;
-    let password = socket.handshake.query.password;
-
     socket.join(token);
-    console.log(token + " | " + username + " | " + password);
+    console.log(token);
     // console.log("Il y a "+allClients.length+" clients connectés");
     console.log("Client: " + socket.id);
     socket.emit('connectack', {connection: "Connected"});
