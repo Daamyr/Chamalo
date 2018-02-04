@@ -10,7 +10,7 @@ https://docs.nativescript.org/ui/components.
     http://docs.nativescript.org/ui/action-bar
     -->
     <Page.actionBar>
-        <ActionBar title="My App" icon="" class="action-bar">
+        <ActionBar title="Hackathon 2K18" icon="" class="action-bar">
         </ActionBar>
     </Page.actionBar>
     <!--
@@ -26,6 +26,8 @@ https://docs.nativescript.org/ui/components.
     -->
     <StackLayout class="p-20">
         <Button text="Connect" tap="{{ onTapConnect }}" class="btn btn-primary btn-active"/>
-        <Button text="Send Location" tap="{{ onTapSendMsg }}" class="btn btn-primary btn-active"/>
+        <Button text="Send Location" tap="{{ onTapSendMsg }}" class="btn btn-primary btn-active"/>           
+        <Button text="StartAccel" tap="{{ onTapStartAccel }}" class="btn btn-primary btn-active"/>
+        <Button text="StopAccel" tap="{{ onTapStopAccel }}" class="btn btn-primary btn-active"/>
     </StackLayout>
 </Page>
