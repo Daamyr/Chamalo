@@ -56,13 +56,14 @@ function onNavigatingTo(args) {
     var page = args.object;
     params = page.navigatingContext;
 
+
     page.bindingContext = createViewModel();
     console.log("page-1 ==> navigatingTo");
 }
 
 function createViewModel(params) {
     var viewModel = new Observable();
-
+console.log("Hello");
     socketio = params.socket;
 
     viewModel.onTapSendMsg = function() {

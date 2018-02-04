@@ -56,7 +56,6 @@ timer.id = setInterval(() => {
     if(phoneStatus == "notOkay"){
         console.log("FallCounter : " + fallCounter);
         if(fallCounter == fallTime){
-            console.log("ARE YOU OKAY M8? IMMA CALL THE AMBULANCE IF NOT!");
             vibrator.vibrate(2000);
             fallCounter = 0;
             notif = true;
@@ -73,7 +72,6 @@ timer.id = setInterval(() => {
         cancelButtonText: "Non",
         }).then(function (result) {
             if(result == true){
-                console.log("WE GOOD MATE");
                 notif = false;
                 alreadyNotified = false;
             } else if(result == false || inactive == true){
@@ -116,7 +114,6 @@ function onNavigatingTo(args) {
 }
 
 function isInDanger(){
-    console.log("HELP ME IMMA DIE");
     stopAccel();
     inactive = false;
     alreadyNotified = false;
@@ -167,7 +164,6 @@ function stopAccel() {
 }
 
 function sendCoord(coords) {
-    console.log("COORDS SENT")
     socketio.emit("app:coords", coords);
 }
 
@@ -202,8 +198,8 @@ function createViewModel(params) {
         inputType: dialogs.inputType.password
         }).then(function (r) {
             if(r.result == true && r.text == params.token){
-                console.log("GOING BACK TO LOGIN");
                 stopAccel();
+                socketio.emit("forceDisconnect");
                 var navigationOptions={
                     moduleName:'./Pages/login-page',
                     context:{socket: socketio,
