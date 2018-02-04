@@ -46,7 +46,8 @@ function createViewModel() {
         connect(viewModel.username, viewModel.token);
         var navigationOptions={
             moduleName:'Pages/main-page',
-            context:{socket: socketio
+            context:{socket: socketio,
+                token : viewModel.token
                 },
             animated: true,
             transition: {

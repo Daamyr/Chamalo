@@ -13,7 +13,7 @@ https://docs.nativescript.org/ui/components.
     http://docs.nativescript.org/ui/action-bar
     -->
     <Page.actionBar>
-        <ActionBar title="Hackathon 2K18" icon="" class="action-bar">
+        <ActionBar title="                   Hackathon 2K18" icon="" class="action-bar">
         </ActionBar>
     </Page.actionBar>
     <!--
@@ -26,10 +26,10 @@ https://docs.nativescript.org/ui/components.
     These components make use of several CSS class names that are part of the NativeScript
     core theme, such as p-20, btn, h2, and text-center. You can view a full list of the
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
-    -->
-    <StackLayout class="p-20">
+-->
+    <StackLayout class="text-center">
         <TextField text="{{ username }}" hint="Identifiant" />
-        <TextField text="{{ token }}" hint="Clef Secrète" />
+        <TextField text="{{ token }}" hint="Clé Secrète" />
         <Button text="Connect" tap="{{ onTap }}" class="btn btn-primary btn-active"/>
     </StackLayout>
 </Page>

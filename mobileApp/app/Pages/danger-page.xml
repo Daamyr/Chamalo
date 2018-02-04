@@ -12,11 +12,7 @@ https://docs.nativescript.org/ui/components.
     The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
     http://docs.nativescript.org/ui/action-bar
     -->
-    <Page.actionBar>
-        <ActionBar title="       Hackathon 2K18" icon="" class="action-bar">
-             <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" tap="{{onNavBtnTap}}"/>
-        </ActionBar>
-    </Page.actionBar>
+
 
 
     <!--
@@ -31,6 +27,9 @@ https://docs.nativescript.org/ui/components.
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
     <StackLayout class="p-20">
-        <Button text="Send Location" tap="{{ onTapSendMsg }}" class="btn btn-primary btn-active"/>        
+        <Label text="title1" />
+        <Label text="title2" />
+        <Label text="title3" />
+        <Label text="title4" />
     </StackLayout>
 </Page>
