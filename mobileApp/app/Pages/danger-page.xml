@@ -15,7 +15,7 @@ https://docs.nativescript.org/ui/components.
     http://docs.nativescript.org/ui/action-bar
     -->
     <Page.actionBar>
-        <ActionBar title="                   Hackathon 2K18" icon="" class="action-bar">
+        <ActionBar title="Chamalo" icon="" class="action-bar">
         </ActionBar>
     </Page.actionBar>
 

@@ -20,6 +20,8 @@ function onNavigatingTo(args) {
     var page = args.object;
     let params;
     params = page.navigationContext;
+
+    
     
     /*
     A page’s bindingContext is an object that should be used to perform
