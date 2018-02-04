@@ -111,6 +111,17 @@ io.sockets.on('connection',
         console.log("Received: 'test' " + data.connection + " " + socket.id);
     });
 
+    socket.on('app:danger',
+     function (data) {
+       console.log("QUELQU'UN N'EST PAS OK");
+       for (mobile of mobileClients) {
+         if (mobile.id == socket.id) {
+           mobile.danger = true;
+           return gestionClients[0].id.emit('gestion:danger', mobileClients);
+         }
+       }
+     });
+
     socket.on('app:coords',
       function(data) {
         for (mobile of mobileClients) {

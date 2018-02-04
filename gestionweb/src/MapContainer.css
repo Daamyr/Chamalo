@@ -37,6 +37,11 @@
   display: inline-block;
 }
 
+#MapLog > #MapRight > label {
+  padding-top: 30px;
+  display: inline-block;
+}
+
 #Toggle {
   top: -5px;
   left: 10px;

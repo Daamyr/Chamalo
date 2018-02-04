@@ -8,6 +8,7 @@ import Toggle from 'react-toggle';
 import Geo from './Geo.js';
 
 import MyGreatPlace from './my_great_place.jsx';
+import OurGreatPlace from './our_great_place.jsx';
 
 let num = 0;
 
@@ -40,6 +41,26 @@ export default class MapContainer extends Component {
       }
 
     });
+
+    this.socketio.on('gestion:danger',
+    function (data){
+      console.log("Receiving ALERT");
+      for (let client of vm.state.listClient) {
+        if (client.name === data.name) {
+          console.log(client.name);
+          let id = client.id;
+          let name = client.name;
+          let latitude = client.latitude;
+          let longitude = client.longitude;
+          let speed = client.speed;
+          let direction = client.direction;
+          let timestamp = client.timestamp;
+          client.danger = data.danger;
+          console.log(latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp);
+        }
+      }
+      vm.setState({listClient: data});
+    });
     // var data = new Geo().Geo();
     // data.features.map((feature)=>
     //   this.state.listDefib.push({
@@ -62,9 +83,8 @@ export default class MapContainer extends Component {
     this.socketio = props.mySocket;
     this.name = "LE NOM";
     this.state = {
-      toggleClient: false,
-      toggleDefib: false,
-      toggle3: false,
+      toggleClient: true,
+      toggleDefib: true,
       listClient: [ {id: 123, name: "Paul", coords: {lat: 46.545732, lng: -72.249542}},
                     {id: 111, name: "Bleu", coords: {lat: 46.545732, lng: -72.349542}},
                     {id: 444, name: "Noir", coords: {lat: 46.545732, lng: -72.149542}}
@@ -140,6 +160,14 @@ export default class MapContainer extends Component {
     }
   }
 
+  handleBaconChange = (event) => {
+    this.setState({toggleClient: !this.state.toggleClient});
+  }
+
+  handleBaconChangeDefib = (event) => {
+    this.setState({toggleDefib: !this.state.toggleDefib});
+  }
+
   render() {
 
 
@@ -190,13 +218,20 @@ export default class MapContainer extends Component {
                 apiKey={'AIzaSyDRWlV2IhcsdiMc8WPZE7m3JlQXiz4o9UI'} // set if you need stats etc ...
                 center={this.props.center}
                 zoom={this.props.zoom}>
-                {this.state.listClient.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
 
+                {this.state.toggleClient ? (
+                  this.state.listClient.map((item)=><OurGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name} danger={item.danger}/>)
+                ) : (
+                  <p></p>
+                )}
+                {}
 
-
-
-                {this.state.listDefib.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
-
+                {this.state.toggleDefib ? (
+                  this.state.listDefib.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name} danger={item.danger}/>)
+                ) : (
+                  <p></p>
+                )}
+                {}
 
                 {/* {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)} */}
               </GoogleMap>
@@ -212,14 +247,8 @@ export default class MapContainer extends Component {
               <label>
               <Toggle
                 defaultChecked={this.state.toggleDefib}
-                onChange={this.handleBaconChange} />
+                onChange={this.handleBaconChangeDefib} />
               <span id="Toggle">Defib</span>
-              </label><br/>
-              <label>
-              <Toggle
-                defaultChecked={this.state.toggleToggle3}
-                onChange={this.handleBaconChange} />
-              <span id="Toggle">Toggle3</span>
               </label>
             </div>
         </div>
