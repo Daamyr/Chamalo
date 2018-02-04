@@ -115,8 +115,8 @@ io.sockets.on('connection',
         for (mobile of mobileClients) {
           if (mobile.id == socket.id) {
             mobile.coords = {};
-            mobile.coords.latitude = data.Latitude
-            mobile.coords.longitude = data.Longitude
+            mobile.coords.lat = data.Latitude
+            mobile.coords.lng = data.Longitude
             mobile.speed = data.Speed;
             mobile.direction = data.Direction;
             mobile.timestamp = data.TimeStamp;
