@@ -39,3 +39,15 @@ function here makes the navigatingTo="onNavigatingTo" binding in this page’s X
 file work.
 */
 exports.onNavigatingTo = onNavigatingTo;
+
+exports.onNavigatedTo = function(){
+console.log("page-1 ==> navigatedTo");
+};
+
+exports.onNavigatedFrom = function(){
+console.log("page-1 ==> onNavigatedFrom");
+};
+
+exports.onNavigatingFrom = function(){
+console.log("page-1 ==> onNavigatingFrom");
+};

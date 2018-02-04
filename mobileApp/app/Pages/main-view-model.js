@@ -1,11 +1,18 @@
+require("globals");
 var SocketIO = require('nativescript-socket.io');
 var accelerometer = require("nativescript-accelerometer");
 var Observable = require("data/observable").Observable;
 var geolocation = require("nativescript-geolocation");
+var application = require("application");
 var timer = require("globals");
-var youGood = require("ui/dialogs");
+var dialogs = require("ui/dialogs");
+var Vibrate = require("nativescript-vibrate").Vibrate;
+var vibrator = new Vibrate();
 
 let socketio = null;
+
+let firstPopup = null;
+let d;
 
 let isDead = false;
 //.. Variables for fall
@@ -20,25 +27,36 @@ let inactive = false;
 let inactivityCounter = 0;
 let inactivityMaxTime = 3;
 
-youGood.confirm({
-    title: "Alert",
-    message: "Are you alright? We noticed bizarre activity.",
-    okButtonText: "I AM alright",
-    cancelButtonText: "I am NOT alright",
-}).then(function (result) {
-    // result argument is boolean
-        if(result == true){
-            console.log("WE GOOD MATE");
-        } else if(result == false){
-            console.log("HELP ME IMMA DIE");
-        }
-    });
+var activity = application.android.startActivity ||
+        application.android.foregroundActivity ||
+        frameModule.topmost().android.currentActivity ||
+        frameModule.topmost().android.activity;
+var lastPress;
+
+activity.onBackPressed = function() {
+    var timeDelay = 500
+    if (lastPress + timeDelay > java.lang.System.currentTimeMillis()) {
+        var startMain = new android.content.Intent(android.content.Intent.ACTION_MAIN);
+        startMain.addCategory(android.content.Intent.CATEGORY_HOME);
+        startMain.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(startMain);
+
+        // If you want to kill the app totally, use these codes instead of above
+        // activity.finish();
+        // java.lang.System.exit(0);
+
+    } else {
+        frameModule.topmost().goBack();
+    }
+    lastPress = java.lang.System.currentTimeMillis();
+}
 
 timer.id = setInterval(() => {
     if(phoneStatus == "notOkay"){
         console.log("FallCounter : " + fallCounter);
         if(fallCounter == fallTime){
             console.log("ARE YOU OKAY M8? IMMA CALL THE AMBULANCE IF NOT!");
+            vibrator.vibrate(2000);
             fallCounter = 0;
             notif = true;
         }else{
@@ -47,13 +65,13 @@ timer.id = setInterval(() => {
     }else if(notif == true && alreadyNotified == false){
         //console.log("NOTIFICATION IS POPPED");
         alreadyNotified = true;
-        youGood.confirm({
-            title: "Alert",
-            message: "Are you alright? We noticed abnormal activity.",
-            okButtonText: "I AM alright",
-            cancelButtonText: "I am NOT alright",
+
+        d = dialogs.confirm({
+        title: "Alert",
+        message: "Are you alright? We noticed abnormal activity.",
+        okButtonText: "I AM alright",
+        cancelButtonText: "I am NOT alright",
         }).then(function (result) {
-    // result argument is boolean
             if(result == true){
                 console.log("WE GOOD MATE");
                 notif = false;
@@ -62,6 +80,7 @@ timer.id = setInterval(() => {
                 isInDanger();
             }
         });
+
     }else{
         fallCounter = 0;
     }
@@ -70,46 +89,31 @@ timer.id = setInterval(() => {
         console.log("InactivityCounter : " + inactivityCounter)
         if(inactivityCounter == inactivityMaxTime){
             isInDanger();
-            youGood.result = false;
+            dialogs.result = false;
         } else{
             inactivityCounter++;
         }
     }
 }, 1000);
 
+function onNavigatingTo(args) {
+    var page = args.object;
+    page.bindingContext = createViewModel();
+    console.log("page-1 ==> navigatingTo");
+}
+
 function isInDanger(){
     console.log("HELP ME IMMA DIE");
+    vibrator.vibrate(2000);
     inactive = false;
     alreadyNotified = false;
     notif = false;
     inactive = true;
     inactivityCounter = 0;
-    isDead = true; 
+    isDead = true;
 }
 
-function connect() {
-    console.log("Connection request");
-    try {
-      if (socketio != null) {
-        console.log("not null");
-        socketio.emit("forceDisconnect");
-        socketio = null;
-      }
 
-      socketio = SocketIO.connect('http://138.197.172.107:8081?token=prod');
-      socketio.emit("Id" , {Id : 1});
-      socketio.on("reconnect", function(){
-        socketio.emit("Id" , {Id : 1});
-      });
-
-    } catch (e) {
-      console.log(e);
-    } finally {
-        
-    }
-}
-
-exports.connect = connect;
 
 function getMessage(counter) {
     if (counter <= 0) {
@@ -150,9 +154,18 @@ function createViewModel() {
     viewModel.counter = 42;
     viewModel.message = getMessage(viewModel.counter);
 
-    viewModel.onTapConnect = function() {
-        connect();
-    }
+    firstPopup = null;
+    isDead = false;
+    // Variables for fall
+    phoneStatus = "ok";
+    notif = false;
+    fallCounter = 0;
+    fallTime = 3;
+    // Variables for inactivi
+    alreadyNotified = false
+    inactive = false;
+    inactivityCounter = 0;
+    inactivityMaxTime = 3;
 
     viewModel.onTapSendMsg = function() {
         geolocation.getCurrentLocation({desiredAccuracy: 3, updateDistance: 10, maximumAge: 20000, timeout: 20000}).then(function (data){
@@ -176,8 +189,6 @@ function createViewModel() {
         stopAccel();
     }
 
-
     return viewModel;
 }
-
 exports.createViewModel = createViewModel;
