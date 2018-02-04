@@ -8,12 +8,12 @@ var application = require("application");
 var timer = require("globals");
 var timer2 = require("globals");
 var dialogs = require("ui/dialogs");
+
 var Vibrate = require("nativescript-vibrate").Vibrate;
 var vibrator = new Vibrate();
 
 let socketio = null;
 let params;
-
 
 var activity = application.android.startActivity ||
         application.android.foregroundActivity ||
@@ -28,10 +28,6 @@ activity.onBackPressed = function() {
         startMain.addCategory(android.content.Intent.CATEGORY_HOME);
         startMain.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(startMain);
-
-        // If you want to kill the app totally, use these codes instead of above
-        // activity.finish();
-        // java.lang.System.exit(0);
 
     } else {
         frameModule.topmost().goBack();
@@ -60,7 +56,7 @@ function onNavigatingTo(args) {
     var page = args.object;
     params = page.navigatingContext;
 
-    //console.dir(params);
+
     page.bindingContext = createViewModel();
     console.log("page-1 ==> navigatingTo");
 }
