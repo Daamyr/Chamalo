@@ -65,31 +65,8 @@ function onNavigatingTo(args) {
     console.log("page-1 ==> navigatingTo");
 }
 
-function isInDanger(){
-    console.log("HELP ME IMMA DIE");
-    vibrator.vibrate(2000);
-    inactive = false;
-    alreadyNotified = false;
-    notif = false;
-    inactive = true;
-    inactivityCounter = 0;
-    isDead = true;
-}
-
-
-
-function getMessage(counter) {
-    if (counter <= 0) {
-        return "Hoorraaay! You unlocked the NativeScript clicker achievement!";
-    } else {
-        return counter + " taps left";
-    }
-}
-
 function createViewModel(params) {
     var viewModel = new Observable();
-    viewModel.counter = 42;
-    viewModel.message = getMessage(viewModel.counter);
 
     socketio = params.socket;
 

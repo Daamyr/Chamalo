@@ -4,6 +4,8 @@ of which NativeScript renders with a platform-specific iOS or Android native con
 You can find a full list of user interface components you can use in your app at
 https://docs.nativescript.org/ui/components.
 -->
+
+
 <Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="onNavigatingTo"
     navigatedFrom="onNavigatedFrom"
     navigatedTo="onNavigatedTo"
@@ -12,8 +14,10 @@ https://docs.nativescript.org/ui/components.
     The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
     http://docs.nativescript.org/ui/action-bar
     -->
-
-
+    <Page.actionBar>
+        <ActionBar title="                   Hackathon 2K18" icon="" class="action-bar">
+        </ActionBar>
+    </Page.actionBar>
 
     <!--
     The StackLayout stacks UI components on the screen—either vertically or horizontally.
@@ -27,9 +31,7 @@ https://docs.nativescript.org/ui/components.
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
     <StackLayout class="p-20">
-        <Label text="title1" />
-        <Label text="title2" />
-        <Label text="title3" />
-        <Label text="title4" />
+        <Label class="h3" text="Nous connaissons vos coordonées."></Label>
+        <Label class="h3" text="Un intervenant sera bientôt sur place."></Label>
     </StackLayout>
 </Page>
