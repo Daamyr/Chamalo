@@ -180,12 +180,14 @@ function deleteMeFromAllClients(id) {
   for (client of mobileClients) {
     if (client.id == id) {
       console.log("yes");
-      let lat = client.coords.lat;
-      let lng = client.coords.lng;
+      if (client.coords.lat) {
+        let lat = client.coords.lat;
+        let lng = client.coords.lng;
 
-      client.coords.lat = lng;
-      client.coords.lng = lat;
-      gestionClients[0].id.emit('gestion:coords', mobileClients);
+        client.coords.lat = lng;
+        client.coords.lng = lat;
+        gestionClients[0].id.emit('gestion:coords', mobileClients);
+      }
       // allClients.splice(allClients.indexOf(client), 1);
     }
   }
