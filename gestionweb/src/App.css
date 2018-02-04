@@ -8,10 +8,26 @@
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
+  background-color: #008E78;
+  height: 60px;
   padding: 20px;
   color: white;
+  margin-bottom: 150px;
+}
+
+.App-header > button {
+  float: right;
+  margin-top: -50px;
+  background-color:#00CAAB;
+  border-radius:5px;
+  border:none;
+  padding:10px 25px;
+  color:#FFF;
+  text-shadow:1px 1px 1px #949494;
+}
+
+.App-header > button:hover {
+  box-shadow: inset 0px 0px 10px rgba(0,0,0,0.9);
 }
 
 .App-title {
@@ -27,6 +43,110 @@
   to { transform: rotate(360deg); }
 }
 
-#root, #app, #map {
+#root, #app {
   height: 100%;
+}
+
+/* #connect {
+  position: relative;
+}
+
+#connect > input {
+  position: relative;
+
+  margin-bottom:50px;
+  background-color: gray;
+}
+
+#connect > label {
+  position: absolute;
+  color: black;
+}
+
+#connect > button {
+
+} */
+
+#connect > div > label {
+  font-size:15px;
+  font-weight:700
+}
+
+#connect > div > input{
+  border:1px solid #DADADA;
+  margin-top:20px;
+  margin-bottom:10px;
+  padding-left:35px;
+  width:310px;
+  height:30px;
+  font-size:14px;
+  box-shadow:0 0 10px;
+  -webkit-box-shadow:0 0 10px;
+  /* For I.E */
+  -moz-box-shadow:0 0 10px;
+  /* For Mozilla Web Browser */
+  border-radius:5px;
+  -webkit-border-radius:5px;
+  /* For I.E */
+  -moz-border-radius:5px
+  /* For Mozilla Web Browser */
+}
+
+#connect > div > button {
+  margin-top:10px;
+  background-color:#00CAAB;
+  border-radius:5px;
+  border:none;
+  padding:10px 25px;
+  color:#FFF;
+  text-shadow:1px 1px 1px #949494;
+}
+#connect > div > button:hover{
+  /* background-color:#008E78; */
+  box-shadow: inset 0px 0px 10px rgba(0,0,0,0.9);
+}
+
+
+.AppLog {
+  text-align: center;
+}
+
+.AppLog-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.AppLog-header {
+  background-color: #008E78;
+  height: 60px;
+  padding: 20px;
+  color: white;
+}
+
+.AppLog-header > button {
+  float: right;
+  margin-top: -50px;
+  background-color:#00CAAB;
+  border-radius:5px;
+  border:none;
+  padding:10px 25px;
+  color:#FFF;
+  text-shadow:1px 1px 1px #949494;
+}
+
+.AppLog-header > button:hover {
+  box-shadow: inset 0px 0px 10px rgba(0,0,0,0.9);
+}
+
+.AppLog-title {
+  font-size: 1.5em;
+}
+
+.AppLog-intro {
+  font-size: large;
+}
+
+@keyframes AppLog-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

@@ -6,6 +6,8 @@ purpose of the file is to pass control to the app’s first module.
 
 require("./bundle-config");
 var application = require("application");
+var socketio = global.socketio = null;
+window.socketio = {};
 
 application.start({ moduleName: "main-page" });
 

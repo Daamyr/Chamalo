@@ -1,0 +1,49 @@
+#MapLog > #MapCenter {
+  position: absolute;
+  width: 60%;
+  height: 85%;
+  left: 15%;
+  display: inline-block;
+}
+
+#MapLog {
+  height: 100%;
+  display: block;
+  z-index: -1;
+  background-color: white;
+}
+
+#MapLog > #map {
+
+}
+
+#MapLog > #MapLeft {
+  width: 20%;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding-top: 80px;
+  padding-left: 40px;
+  display: inline-block;
+}
+
+#MapLog > #MapRight {
+  float: right;
+  width: 20%;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding-top: 80px;
+  display: inline-block;
+}
+
+#MapLog > #MapRight > label {
+  padding-top: 30px;
+  display: inline-block;
+}
+
+#Toggle {
+  top: -5px;
+  left: 10px;
+  position: relative;
+}
