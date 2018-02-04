@@ -24,8 +24,8 @@ export default class MapContainer extends Component {
       for (let client of data) {
         let id = client.id;
         let name = client.name;
-        let latitude = client.latitude;
-        let longitude = client.longitude;
+        let latitude = client.coords.lat;
+        let longitude = client.coords.lng;
         let speed = client.speed;
         let direction = client.direction;
         let timestamp = client.timestamp;
@@ -50,8 +50,8 @@ export default class MapContainer extends Component {
           console.log(client.name);
           let id = client.id;
           let name = client.name;
-          let latitude = client.latitude;
-          let longitude = client.longitude;
+          let latitude = client.coords.lat;
+          let longitude = client.coords.lng;
           let speed = client.speed;
           let direction = client.direction;
           let timestamp = client.timestamp;
@@ -207,9 +207,11 @@ export default class MapContainer extends Component {
   dropdown = () => {
     let whtml = [];
     for (let client of this.state.listClient) {
+      if(client.coords){
       if (!(client.coords.lat < -70)) {
         whtml.push(<div id="dropdown"><button id="dropbtn">{client.name}</button><div id="dropdown-content"><a href="#">Latitude: {client.coords.lat}</a><a href="#">Longitude: {client.coords.lng}</a></div></div>);
         whtml.push(<br/>)
+      } 
       }
     }
     console.dir(whtml);
@@ -250,7 +252,7 @@ export default class MapContainer extends Component {
                 zoom={this.props.zoom}>
 
                 {this.state.toggleClient ? (
-                  this.state.listClient.map((item)=><OurGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name} danger={item.danger}/>)
+                  this.state.listClient.map((item)=><OurGreatPlace key={Math.random()*100} lat={item.coords.lat} lng={item.coords.lng} text={item.name} danger={item.danger}/>)
                 ) : (
                   <p></p>
                 )}
