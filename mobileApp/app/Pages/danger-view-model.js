@@ -6,6 +6,7 @@ var Observable = require("data/observable").Observable;
 var geolocation = require("nativescript-geolocation");
 var application = require("application");
 var timer = require("globals");
+var timer2 = require("globals");
 var dialogs = require("ui/dialogs");
 var Vibrate = require("nativescript-vibrate").Vibrate;
 var vibrator = new Vibrate();
@@ -51,7 +52,7 @@ timer.id = setInterval(() => {
         });       
 }, 2500);
 
-timer.id = setInterval(() => {
+timer2.id = setInterval(() => {
     vibrator.vibrate(500);      
 }, 1000);
 
@@ -82,6 +83,8 @@ function createViewModel(params) {
             sendCoord(newData);
         });       
     }
+
+    socketio.emit("app:danger" , {danger : true});
 
     return viewModel;
 }

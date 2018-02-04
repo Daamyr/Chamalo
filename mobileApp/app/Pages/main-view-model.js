@@ -99,7 +99,7 @@ timer.id = setInterval(() => {
     }
 }, 1000);
 
-timer.id = setInterval(() => {
+timer2.id = setInterval(() => {
     geolocation.getCurrentLocation({desiredAccuracy: 3, updateDistance: 10, maximumAge: 20000, timeout: 20000}).then(function (data){
             //console.log(require('util').inspect(data, { depth: null }));
             let newData = {Latitude : data.latitude, 
@@ -132,6 +132,9 @@ function isInDanger(){
     inactivityCounter = 0;
     isDead = true;
 
+    //timer.clearInterval();
+    //timer2.clearInterval();
+
     var navigationOptions={
         moduleName:'./Pages/danger-page',
         context:{socket: socketio
@@ -149,25 +152,28 @@ function isInDanger(){
 }
 
 function startAccel() {
-  accelerometer.startAccelerometerUpdates(function(data) {
-    //console.log("x: " + data.x + "y: " + data.y + "z: " + data.z);
-    /*vm.set("gyrox", "X:" + (data.x).toString());
-    vm.set("gyroy", "Y:" + (data.y).toString());
-    vm.set("gyroz", "Z:" + (data.z).toString());*/
-    //let SVM = Math.sqrt(Math.pow(data.x, 2) + Math.pow(data.y, 2) + Math.pow(data.z, 2));
-    //console.log(SVM);
-    let thresh = 0.7;
-    if(((data.x < -thresh || data.x > thresh) || (data.y >= -thresh & data.y <= thresh)) && notif == false && isDead == false){
-        phoneStatus = "notOkay";
-    } else{
-        phoneStatus = "ok";
+    try {
+        accelerometer.startAccelerometerUpdates(function(data) {
+        let thresh = 0.9;
+        if(((data.x < -thresh || data.x > thresh) || (data.y >= -thresh & data.y <= thresh)) && notif == false && isDead == false){
+            phoneStatus = "notOkay";
+        } else{
+            phoneStatus = "ok";
+        }
+        }, { sensorDelay: "normal" });
     }
-  }, { sensorDelay: "normal" });
+    catch(error) {
+        console.log(error);
+    }
 }
 
 function stopAccel() {
-  accelerometer.stopAccelerometerUpdates();
-  //vm.set("message", "Accel Off");
+    try{
+        accelerometer.stopAccelerometerUpdates();
+    }
+    catch(error){
+        console.log(error);
+    }
 }
 
 function sendCoord(coords) {

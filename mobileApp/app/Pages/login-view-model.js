@@ -25,7 +25,7 @@ function connect(vm) {
       socketio = SocketIO.connect('http://138.197.172.107:8081?token=' + vm.token + '&id=1&username=' + vm.username);
       //socketio.emit("Id" , {Id : 1});
       socketio.on("connectack", function(){
-        console.log("PASSED IN HERE COOL POUAIN EYS");
+        console.log("PASSED IN HERE COOL POUAIN EYSz");
          var navigationOptions={
             moduleName:'./Pages/main-page',
             context:{socket: socketio,
