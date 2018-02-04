@@ -14,6 +14,7 @@ var vibrator = new Vibrate();
 
 let socketio = null;
 let params;
+let isVibratiing = true;
 
 var activity = application.android.startActivity ||
         application.android.foregroundActivity ||
@@ -49,7 +50,9 @@ timer.id = setInterval(() => {
 }, 2500);
 
 timer2.id = setInterval(() => {
-    vibrator.vibrate(500);      
+    if(isVibratiing == true){
+        vibrator.vibrate(500);
+    }   
 }, 1000);
 
 function onNavigatingTo(args) {
@@ -62,7 +65,7 @@ function onNavigatingTo(args) {
 
 function createViewModel(params) {
     var viewModel = new Observable();
-
+    isVibratiing = true;
     socketio = params.socket;
 
     viewModel.onTapSendMsg = function() {
@@ -77,6 +80,46 @@ function createViewModel(params) {
             sendCoord(newData);
         });       
     }
+
+    viewModel.onTap = function() {
+        var dialogs = require("ui/dialogs");
+        // inputType property can be dialogs.inputType.password or dialogs.inputType.text.
+        dialogs.prompt({
+            title: "Attention",
+            message: "Entrez votre clé secrète pour vous déconecter",
+            okButtonText: "Entrer",
+            cancelButtonText: "Annuler",
+            inputType: dialogs.inputType.password
+        }).then(function (r) {
+            if(r.result == true && r.text == "prod"){
+                isVibratiing = false;
+                        var navigationOptions={
+                        moduleName:'./Pages/login-page',
+                        context:{socket: socketio
+                           
+                            },
+                        animated: true,
+                        transition: {
+                            name: "slideRight",
+                            duration: 380,
+                            curve: "easeIn"
+                        },
+                        clearHistory: true
+                    }
+                    frameModule.topmost().navigate(navigationOptions);
+            }else if(r.result == true && r.text != "prod"){
+                dialogs.alert({
+                title: "Message",
+                message: "La clé secrète est incorrecte",
+                okButtonText: "Réessayer"
+                }).then(function () {});
+            }else{
+                console.log("closed");
+            }
+        }
+    });
+
+        
 
     socketio.emit("app:danger" , {danger : true});
 
