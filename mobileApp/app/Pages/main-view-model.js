@@ -8,6 +8,7 @@ var application = require("application");
 var timer = require("globals");
 var timer2 = require("globals");
 var dialogs = require("ui/dialogs");
+var popups = require("nativescript-dialog");
 var Vibrate = require("nativescript-vibrate").Vibrate;
 var vibrator = new Vibrate();
 
@@ -15,20 +16,21 @@ let socketio = null;
 let params;
 
 let firstPopup = null;
-let d;
+var d;
 
 let isDead = false;
+
 //.. Variables for fall
 let phoneStatus = "ok";
 let notif = false;
 let fallCounter = 0;
-let fallTime = 3;
+let fallTime = 15;
 
 //.. Variables for inactivity
 let alreadyNotified = false;
 let inactive = false;
 let inactivityCounter = 0;
-let inactivityMaxTime = 3;
+let inactivityMaxTime = 10;
 
 var activity = application.android.startActivity ||
         application.android.foregroundActivity ||
@@ -43,10 +45,6 @@ activity.onBackPressed = function() {
         startMain.addCategory(android.content.Intent.CATEGORY_HOME);
         startMain.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(startMain);
-
-        // If you want to kill the app totally, use these codes instead of above
-        // activity.finish();
-        // java.lang.System.exit(0);
 
     } else {
         frameModule.topmost().goBack();
@@ -68,7 +66,6 @@ timer.id = setInterval(() => {
     }else if(notif == true && alreadyNotified == false){
         //console.log("NOTIFICATION IS POPPED");
         alreadyNotified = true;
-
         d = dialogs.confirm({
         title: "Alerte",
         message: "Nous avons détecté des comportements anormaux. Ètes-vous en sécurité? ",
@@ -101,7 +98,6 @@ timer.id = setInterval(() => {
 
 timer2.id = setInterval(() => {
     geolocation.getCurrentLocation({desiredAccuracy: 3, updateDistance: 10, maximumAge: 20000, timeout: 20000}).then(function (data){
-            //console.log(require('util').inspect(data, { depth: null }));
             let newData = {Latitude : data.latitude, 
                            Longitude : data.longitude, 
                            Speed : data.speed, 
@@ -115,9 +111,6 @@ timer2.id = setInterval(() => {
 function onNavigatingTo(args) {
     var page = args.object;
     params = page.navigatingContext;
-
-    
-    //console.dir(params);
     page.bindingContext = createViewModel();
     console.log("page-1 ==> navigatingTo");
 }
@@ -131,9 +124,6 @@ function isInDanger(){
     inactive = true;
     inactivityCounter = 0;
     isDead = true;
-
-    //timer.clearInterval();
-    //timer2.clearInterval();
 
     var navigationOptions={
         moduleName:'./Pages/danger-page',
@@ -194,12 +184,12 @@ function createViewModel(params) {
     phoneStatus = "ok";
     notif = false;
     fallCounter = 0;
-    fallTime = 3;
+    fallTime = 15;
     // Variables for inactivi
     alreadyNotified = false
     inactive = false;
     inactivityCounter = 0;
-    inactivityMaxTime = 3;
+    inactivityMaxTime = 10;
 
     startAccel();
 
