@@ -60,7 +60,7 @@
   height: 100%;
   display: block;
   z-index: -1;
-  background-color: white;
+  background-color: #efffff;
 }
 
 #MapLog > #map {
@@ -80,6 +80,14 @@
   padding-top: 30px;
   display: inline-block;
   z-index: -1;
+}
+
+#MapRight{
+  text-align: left;
+}
+
+body{
+  background-color: #efffff;
 }
 
 #MapLog > #MapRight {

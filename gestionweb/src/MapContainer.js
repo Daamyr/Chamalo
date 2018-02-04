@@ -169,6 +169,40 @@ export default class MapContainer extends Component {
     this.setState({toggleDefib: !this.state.toggleDefib});
   }
 
+  handleBaconChangePoI = (event) => {
+    this.setState({togglePoI: !this.state.togglePoI});
+    this.fetchPointOfInteret();
+  }
+
+  fetchPointOfInteret(){
+    if(this.state.togglePoI){
+     this.setState({listPoI: []});
+     return;
+   }
+   else if (this.state.listPoI.length > 0)
+    return;
+
+  var data = new Geo().PoIGeo();
+  for(var feature of data.features){
+    if( feature.properties.code == 2101 ||
+        feature.properties.code == 2110 ||
+        feature.properties.code == 2901){
+    this.state.listPoI.push({
+      id: Math.random()*200,
+      description:'point of interest',
+      class:feature.properties.fclass,
+      name:feature.properties.name,
+      address: feature.properties.Adresse,
+      coords:
+      {
+        lat: feature.geometry.coordinates[1],
+        lng: feature.geometry.coordinates[0]
+      }
+    });
+    }
+    
+  }
+}
 
   dropdown = () => {
     let whtml = [];
@@ -199,22 +233,8 @@ export default class MapContainer extends Component {
                       }
 
         ));
-    // var data = new Geo().PoIGeo();
-    // data.features.map((feature)=>
-    //   this.state.listPoI.push({
-    //                     id: Math.random()*200,
-    //                     description:'point of interest',
-    //                     class:feature.properties.fclass,
-    //                     name:feature.properties.name,
-    //                     address: feature.properties.Adresse,
-    //                     coords:
-    //                       {
-    //                         lat: feature.geometry.coordinates[1],
-    //                         lng: feature.geometry.coordinates[0]
-    //                       }
-    //                   }
-    //
-    //   ));
+    var data = new Geo().PoIGeo();
+    
 
 
     return (
@@ -241,25 +261,44 @@ export default class MapContainer extends Component {
                 ) : (
                   <p></p>
                 )}
-                {}
+
+                {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.class}/>)}
 
                 {/* {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)} */}
               </GoogleMap>
 
             </div>
             <div id="MapRight">
-              <label>
-              <Toggle
-                defaultChecked={this.state.toggleClient}
-                onChange={this.handleBaconChange} />
-              <span id="Toggle">Clients</span>
-              </label><br/>
-              <label>
-              <Toggle
-                defaultChecked={this.state.toggleDefib}
-                onChange={this.handleBaconChangeDefib} />
-              <span id="Toggle">Defib</span>
-              </label>
+            <ul>
+              <li>
+                <label>
+                  <Toggle
+                  defaultChecked={this.state.toggleClient}
+                  onChange={this.handleBaconChange} />
+                  <span id="Toggle">Agents</span>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <Toggle
+                  defaultChecked={this.state.toggleDefib}
+                  onChange={this.handleBaconChangeDefib} />
+                  <span id="Toggle">DEA</span>
+                </label>
+              </li>
+
+              <li>
+                <label>
+                  <Toggle
+                  defaultChecked={this.state.togglePoI}
+                  onChange={this.handleBaconChangePoI} />
+                  <span id="Toggle">Points d'intérêts</span>
+                </label>
+              </li>
+            </ul>
+              
+              
             </div>
         </div>
       );
