@@ -1,6 +1,7 @@
 const http = require('http');
 const _ = require('lodash');
 
+
 var store = require('json-fs-store')();
 
 // store.add({id: "data", content: [{token: "prod", name: "Paul", username: "user", password: "pass"}]}, function(err) {
@@ -73,7 +74,7 @@ function verifyUserConnectRequest(token, username, password, socket) {
         if (gestionnaire.username === username && gestionnaire.password === password) {
           console.log("Added as gestion");
           socket.emit('connectack', {connection: "Connected"});
-          gestionClients.push({id: socket.id, token: token});
+          gestionClients = [{id: socket}];
           console.log("Gestion connected");
           console.log("Client: " + socket.id);
         } else {
@@ -115,15 +116,15 @@ io.sockets.on('connection',
         for (mobile of mobileClients) {
           if (mobile.id == socket.id) {
             mobile.coords = {};
-            mobile.coords.latitude = data.Latitude
-            mobile.coords.longitude = data.Longitude
+            mobile.coords.lat = data.Latitude
+            mobile.coords.lng = data.Longitude
             mobile.speed = data.Speed;
             mobile.direction = data.Direction;
             mobile.timestamp = data.TimeStamp;
-            console.log("Received: 'test' " + mobile.coords.latitude + " " + mobile.coords.longitude + " " + mobile.speed + " " + mobile.direction + " " + mobile.timestamp + " " + socket.id);
+            console.log("Received: 'test' " + mobile.coords.lat + " " + mobile.coords.lng + " " + mobile.speed + " " + mobile.direction + " " + mobile.timestamp + " " + socket.id);
           }
         }
-        console.dir(mobile);
+        gestionClients[0].id.emit('gestion:coords', mobileClients);
     });
 
     socket.on('forceDisconnect', function(){
@@ -139,19 +140,21 @@ io.sockets.on('connection',
   }
 );
 
-setInterval(sendCoord, 2500);
-function sendCoord() {
-  console.log("Sending stuff");
-  for (client of gestionClients) {
-    for (mobile of mobileClients) {
-      if (mobile.token != client.token) {
-        delete mobile;
-      }
-    }
-    io.to(client.token).emit('gestion:coords', mobileClients);
-    // io.to('prod').emit('gestion:coords', mobileClients);
-  }
-}
+// setInterval(sendCoord, 5000);
+
+// function sendCoord() {
+//   gestionClients[0];
+//   console.log("Sending stuff");
+//   for (client of gestionClients) {
+//     for (mobile of mobileClients) {
+//       if (mobile.token != client.token) {
+//         delete mobile;
+//       }
+//     }
+//     // io.to('prod').emit('gestion:coords', mobileClients);
+//   }
+//   gestionClients[0].id.emit('gestion:coords', mobileClients);
+// }
 
 function allClients2str() {
   let str = "";
@@ -165,11 +168,18 @@ function deleteMeFromAllClients(id) {
   for (client of mobileClients) {
     if (client.id == id) {
       console.log("yes");
+      let lat = client.coords.lat;
+      let lng = client.coords.lng;
+
+      client.coords.lat = lng;
+      client.coords.lng = lat;
+      gestionClients[0].id.emit('gestion:coords', mobileClients);
       // allClients.splice(allClients.indexOf(client), 1);
     }
   }
   for (client of gestionClients) {
     if (client.id == id) {
+      delete client;
       console.log("oui");
       // allClients.splice(allClients.indexOf(client), 1);
     }

@@ -9,12 +9,37 @@ import Geo from './Geo.js';
 
 import MyGreatPlace from './my_great_place.jsx';
 
+let num = 0;
+
 export default class MapContainer extends Component {
   componentWillMount () {
 
   }
 
   componentDidMount(){
+    let vm = this;
+    this.socketio.on('gestion:coords',
+    function (data){
+      for (let client of data) {
+        let id = client.id;
+        let name = client.name;
+        let latitude = client.latitude;
+        let longitude = client.longitude;
+        let speed = client.speed;
+        let direction = client.direction;
+        let timestamp = client.timestamp;
+        console.log(latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp);
+      }
+      if (data.length > 0) {
+        console.log("Receiving coords");
+        vm.setState({listClient: data});
+      } else {
+        console.log("Receiving nothing "+num);
+        num++;
+        vm.setState({listClient: []});
+      }
+
+    });
     // var data = new Geo().Geo();
     // data.features.map((feature)=>
     //   this.state.listDefib.push({
@@ -63,20 +88,7 @@ export default class MapContainer extends Component {
         }
       }
     }
-    this.socketio.on('gestion:coords',
-    function (data){
-      console.log("Receiving coords");
-      for (let client of data) {
-        let id = client.id;
-        let name = client.name;
-        let latitude = client.latitude;
-        let longitude = client.longitude;
-        let speed = client.speed;
-        let direction = client.direction;
-        let timestamp = client.timestamp;
-        console.log(latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp);
-      }
-    });
+
   }
 
   createMapOptions(maps) {
@@ -114,12 +126,12 @@ export default class MapContainer extends Component {
     componentDidUpdate(prevProps) {
     const { maps } = this.props
 
-    if (maps.mapInstance !== prevProps.maps.mapInstance) {
-      if (this.marker) {
-        this.marker.setMap(null)
-      }
-      this.renderMarker()
-    }
+    // if (maps.mapInstance !== prevProps.maps.mapInstance) {
+    //   if (this.marker) {
+    //     this.marker.setMap(null)
+    //   }
+    //   this.renderMarker()
+    // }
 
     // Update marker visibiliy
     if (this.marker && this.props.visible !== this.marker.visible) {
@@ -145,22 +157,22 @@ export default class MapContainer extends Component {
                       }
 
         ));
-    var data = new Geo().PoIGeo();
-    data.features.map((feature)=>
-      this.state.listPoI.push({
-                        id: Math.random()*200,
-                        description:'point of interest',
-                        class:feature.properties.fclass,
-                        name:feature.properties.name,
-                        address: feature.properties.Adresse,
-                        coords:
-                          {
-                            lat: feature.geometry.coordinates[1],
-                            lng: feature.geometry.coordinates[0]
-                          }
-                      }
-
-      ));
+    // var data = new Geo().PoIGeo();
+    // data.features.map((feature)=>
+    //   this.state.listPoI.push({
+    //                     id: Math.random()*200,
+    //                     description:'point of interest',
+    //                     class:feature.properties.fclass,
+    //                     name:feature.properties.name,
+    //                     address: feature.properties.Adresse,
+    //                     coords:
+    //                       {
+    //                         lat: feature.geometry.coordinates[1],
+    //                         lng: feature.geometry.coordinates[0]
+    //                       }
+    //                   }
+    //
+    //   ));
 
 
     return (
@@ -180,13 +192,13 @@ export default class MapContainer extends Component {
                 zoom={this.props.zoom}>
                 {this.state.listClient.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
 
-                
-                 
-                
+
+
+
                 {this.state.listDefib.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
 
-                
-                {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
+
+                {/* {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)} */}
               </GoogleMap>
 
             </div>
