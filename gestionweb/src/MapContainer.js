@@ -3,7 +3,9 @@ import GoogleMap from 'google-map-react'
 import './MapContainer.css';
 import './React-Toggle.css';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import Toggle from 'react-toggle'
+import Toggle from 'react-toggle';
+// import defibData from './defibrillateurs.geojson';
+import Geo from './Geo.js';
 
 import MyGreatPlace from './my_great_place.jsx';
 
@@ -13,7 +15,21 @@ export default class MapContainer extends Component {
     }
 
   componentDidMount(){
+    // var data = new Geo().Geo();
+    // data.features.map((feature)=>
+    //   this.state.listDefib.push({
+    //                     name:'DEA',
+    //                     address: feature.properties.Adresse,
+    //                     coords:
+    //                       {
+    //                         lat: feature.geometry.coordinates[0],
+    //                         lng: feature.geometry.coordinates[1]
+    //                       }
+    //                   }
 
+    //     ));
+    // console.log(this.state.listDefib);
+    //console.log(defibData.features.map((feature)=>feature.geometry.coordinates[0]));
   }
 
   constructor(props){
@@ -24,7 +40,10 @@ export default class MapContainer extends Component {
       toggleClient: false,
       toggleDefib: false,
       toggle3: false,
-      listClient: [{id: 123, name: "Paul"}, {id: 111, name: "Bleu"}],
+      listClient: [ {id: 123, name: "Paul", coords: {lat: 46.545732, lng: -72.249542}},
+                    {id: 111, name: "Bleu", coords: {lat: 46.545732, lng: -72.349542}},
+                    {id: 444, name: "Noir", coords: {lat: 46.545732, lng: -72.149542}}
+                    ],
       listDefib: [],
       page : "asd",
       selectedLang: "fr",
@@ -58,15 +77,42 @@ export default class MapContainer extends Component {
   };
 
   static defaultProps = {
-    center: [59.938043, 30.337157],
+    center: [46.545732, -72.449542],
     zoom: 9,
-    greatPlaceCoords: {lat: 59.724465, lng: 30.080121}
+    greatPlaceCoords: {lat: 46.545732, lng: -72.449542}
   };
 
   shouldComponentUpdate = shouldPureComponentUpdate;
 
 
+  
+
+    // condition(){
+    //   if(this.state.toggleDefib){
+    //     return this.state.listDefib.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
+    //   }
+    //   else{
+    //     return {}
+    //   }
+    // }
+
   render() {
+
+
+    var data = new Geo().Geo();
+    data.features.map((feature)=>
+      this.state.listDefib.push({
+                        id: Math.random()*100,
+                        name:'DEA',
+                        address: feature.properties.Adresse,
+                        coords:
+                          {
+                            lat: feature.geometry.coordinates[1],
+                            lng: feature.geometry.coordinates[0]
+                          }
+                      }
+
+        ));
 
 
     return (
@@ -81,12 +127,16 @@ export default class MapContainer extends Component {
             <div id="MapCenter">
 
               <GoogleMap
-                // apiKey={YOUR_GOOGLE_MAP_API_KEY} // set if you need stats etc ...
+                apiKey={'AIzaSyDRWlV2IhcsdiMc8WPZE7m3JlQXiz4o9UI'} // set if you need stats etc ...
                 center={this.props.center}
                 zoom={this.props.zoom}>
-                <MyGreatPlace lat={59.955413} lng={30.337844} text={'A'} /* Kreyser Avrora */ />
-                <MyGreatPlace {...this.props.greatPlaceCoords} text={'B'} /* road circle */ />
+                {this.state.listClient.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
+
+                {this.state.listDefib.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)}
+                 
+                
               </GoogleMap>
+                }
 
             </div>
             <div id="MapRight">

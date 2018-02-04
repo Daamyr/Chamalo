@@ -4,12 +4,14 @@ import './App.css';
 import {GoogleApiWrapper} from 'google-maps-react';
 import SocketIO from 'socket.io-client';
 
+
 // var SocketIO = require('nativescript-socket.io');
 // let socketio = null;
 
 class App extends Component {
   componentDidMount(){
     console.log("Hello" + this.socketio);
+
     // document.getElementById('map').setAttribute("style", "visibility: hidden");
   }
 
