@@ -128,12 +128,17 @@ io.sockets.on('connection',
         for (mobile of mobileClients) {
           if (mobile.id == socket.id) {
             mobile.coords = {};
-            mobile.coords.lat = data.Latitude
-            mobile.coords.lng = data.Longitude
+            mobile.coords.lat = data.Latitude;
+            mobile.coords.lng = data.Longitude;
             mobile.speed = data.Speed;
             mobile.direction = data.Direction;
             mobile.timestamp = data.TimeStamp;
             console.log("Received: 'test' " + mobile.coords.lat + " " + mobile.coords.lng + " " + mobile.speed + " " + mobile.direction + " " + mobile.timestamp + " " + socket.id);
+            if (!mobile.coords.lat) {
+              mobile.coords.lat = 46.5459588;
+              mobile.coords.lng = -72.7495691;
+              return io.to(mobile.token).emit('gestion:coords', mobileClients);
+            }
             io.to(mobile.token).emit('gestion:coords', mobileClients);
           }
         }
@@ -145,7 +150,6 @@ io.sockets.on('connection',
 
     socket.on('disconnect', function() {
       deleteMeFromAllClients(socket.id);
-      socket.broadcast.emit('connectack', {connection: "Someone Disconnected"});
       console.log("Client has disconnected");
     });
 
@@ -180,13 +184,13 @@ function deleteMeFromAllClients(id) {
   for (client of mobileClients) {
     if (client.id == id) {
       console.log("yes");
-      if (client.coords.lat) {
+      if (client.coords) {
         let lat = client.coords.lat;
         let lng = client.coords.lng;
 
         client.coords.lat = lng;
         client.coords.lng = lat;
-        gestionClients[0].id.emit('gestion:coords', mobileClients);
+        io.to(client.token).emit('gestion:coords', mobileClients);
       }
       // allClients.splice(allClients.indexOf(client), 1);
     }
