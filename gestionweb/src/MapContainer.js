@@ -85,6 +85,7 @@ export default class MapContainer extends Component {
     this.state = {
       toggleClient: true,
       toggleDefib: true,
+      togglePoI: false,
       listClient: [ {id: 123, name: "Paul", coords: {lat: 46.545732, lng: -72.249542}},
                     {id: 111, name: "Bleu", coords: {lat: 46.545732, lng: -72.349542}},
                     {id: 444, name: "Noir", coords: {lat: 46.545732, lng: -72.149542}}
@@ -168,6 +169,41 @@ export default class MapContainer extends Component {
     this.setState({toggleDefib: !this.state.toggleDefib});
   }
 
+  handleBaconChangePoI = (event) => {
+    this.setState({togglePoI: !this.state.togglePoI});
+    this.fetchPointOfInteret();
+  }
+
+  fetchPointOfInteret(){
+    if(this.state.togglePoI){
+     this.setState({listPoI: []});
+     return;
+   }
+   else if (this.state.listPoI.length > 0)
+    return;
+
+  var data = new Geo().PoIGeo();
+  for(var feature of data.features){
+    if( feature.properties.code == 2101 ||
+        feature.properties.code == 2110 ||
+        feature.properties.code == 2901){
+    this.state.listPoI.push({
+      id: Math.random()*200,
+      description:'point of interest',
+      class:feature.properties.fclass,
+      name:feature.properties.name,
+      address: feature.properties.Adresse,
+      coords:
+      {
+        lat: feature.geometry.coordinates[1],
+        lng: feature.geometry.coordinates[0]
+      }
+    });
+    }
+    
+  }
+}
+
   render() {
 
 
@@ -185,22 +221,8 @@ export default class MapContainer extends Component {
                       }
 
         ));
-    // var data = new Geo().PoIGeo();
-    // data.features.map((feature)=>
-    //   this.state.listPoI.push({
-    //                     id: Math.random()*200,
-    //                     description:'point of interest',
-    //                     class:feature.properties.fclass,
-    //                     name:feature.properties.name,
-    //                     address: feature.properties.Adresse,
-    //                     coords:
-    //                       {
-    //                         lat: feature.geometry.coordinates[1],
-    //                         lng: feature.geometry.coordinates[0]
-    //                       }
-    //                   }
-    //
-    //   ));
+    var data = new Geo().PoIGeo();
+    
 
 
     return (
@@ -231,7 +253,8 @@ export default class MapContainer extends Component {
                 ) : (
                   <p></p>
                 )}
-                {}
+
+                {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.class}/>)}
 
                 {/* {this.state.listPoI.map((item)=><MyGreatPlace key={item.id} lat={item.coords.lat} lng={item.coords.lng} text={item.name}/>)} */}
               </GoogleMap>
@@ -242,13 +265,19 @@ export default class MapContainer extends Component {
               <Toggle
                 defaultChecked={this.state.toggleClient}
                 onChange={this.handleBaconChange} />
-              <span id="Toggle">Clients</span>
+              <span id="Toggle">Agents</span>
               </label><br/>
               <label>
               <Toggle
                 defaultChecked={this.state.toggleDefib}
                 onChange={this.handleBaconChangeDefib} />
-              <span id="Toggle">Defib</span>
+              <span id="Toggle">DEA</span>
+              </label>
+              <label>
+              <Toggle
+                defaultChecked={this.state.togglePoI}
+                onChange={this.handleBaconChangePoI} />
+              <span id="Toggle">Points d'intérêts</span>
               </label>
             </div>
         </div>

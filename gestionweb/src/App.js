@@ -73,7 +73,10 @@ class App extends Component {
         this.socketio = null;
       }
 
+
       this.socketio = SocketIO.connect('http://138.197.172.107:8081?token=prod&id=0&username='+ this.state.username +'&password='+ this.state.password);
+
+      
 
       let vm = this;
       this.socketio.on('connectack',
@@ -81,18 +84,20 @@ class App extends Component {
           console.log("Auth ok");
           vm.setPage("normal");//-----------------------------------------
         });
+
+      this.socketio.on('notconnectack',
+        function(){
+          if (vm.state.selectedLang === "fr") {
+          alert("Identifiants incorrects.");
+        } else {
+          alert("Wrong username or password.");
+        }
+        });
+
     } catch (e) {
       console.log(e);
     } finally {
 
-    }
-  }
-
-  test() {
-    if(!this.socketio.connected) {
-      alert("you're not connected");
-    } else {
-    this.socketio.emit("test", {"connection":{"prenom":"Maxime", "nom":"Damour"}});
     }
   }
 
