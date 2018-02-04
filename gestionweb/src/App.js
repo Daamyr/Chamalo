@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import MapContainer from './MapContainer.js'
 import {GoogleApiWrapper} from 'google-maps-react';
 import SocketIO from 'socket.io-client';
 
@@ -11,8 +12,6 @@ import SocketIO from 'socket.io-client';
 class App extends Component {
   componentDidMount(){
     console.log("Hello" + this.socketio);
-
-    // document.getElementById('map').setAttribute("style", "visibility: hidden");
   }
 
   constructor(){
@@ -20,7 +19,7 @@ class App extends Component {
     this.socketio = null;
     this.name = "LE NOM";
     this.state = {
-      page : "asd",
+      page : "login",
       username : "",
       password : "",
       selectedLang: "fr",
@@ -76,16 +75,6 @@ class App extends Component {
 
       this.socketio = SocketIO.connect('http://138.197.172.107:8081?token=prod&id=0&username='+ this.state.username +'&password='+ this.state.password);
 
-      this.socketio.on('gestion:coords',
-        function (data){
-          let latitude = data.Latitude;
-          let longitude = data.Longitude;
-          let speed = data.Speed;
-          let direction = data.Direction;
-          let timestamp = data.TimeStamp;
-          console.log(latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp);
-        });
-
       let vm = this;
       this.socketio.on('connectack',
         function(){
@@ -109,6 +98,7 @@ class App extends Component {
 
   render() {
     if(this.state.page === 'login') {
+      console.log(this.socketio);
       return (
         <div className="App">
           <header className="App-header">
@@ -138,12 +128,14 @@ class App extends Component {
         );
     }
 
-    document.getElementById('map').setAttribute("style", "visibility: visible");
     return (
       <div className="AppLog">
         <header className="AppLog-header">
           <h1 className="AppLog-title">Welcome to LE NOM</h1>
         </header>
+        <MapContainer
+          mySocket={this.socketio}
+        />
       </div>
     );
   }

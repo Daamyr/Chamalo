@@ -12,7 +12,7 @@ import MyGreatPlace from './my_great_place.jsx';
 export default class MapContainer extends Component {
   componentWillMount () {
 
-    }
+  }
 
   componentDidMount(){
     // var data = new Geo().Geo();
@@ -34,7 +34,7 @@ export default class MapContainer extends Component {
 
   constructor(props){
     super(props);
-    this.socketio = null;
+    this.socketio = props.mySocket;
     this.name = "LE NOM";
     this.state = {
       toggleClient: false,
@@ -63,6 +63,20 @@ export default class MapContainer extends Component {
         }
       }
     }
+    this.socketio.on('gestion:coords',
+    function (data){
+      console.log("Receiving coords");
+      for (let client of data) {
+        let id = client.id;
+        let name = client.name;
+        let latitude = client.latitude;
+        let longitude = client.longitude;
+        let speed = client.speed;
+        let direction = client.direction;
+        let timestamp = client.timestamp;
+        console.log(latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp);
+      }
+    });
   }
 
   createMapOptions(maps) {
@@ -113,7 +127,6 @@ export default class MapContainer extends Component {
       this.renderMarker()
     }
   }
-
 
   render() {
 
