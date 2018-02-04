@@ -78,6 +78,7 @@ function verifyUserConnectRequest(token, username, password, socket) {
           console.log("Gestion connected");
           console.log("Client: " + socket.id);
         } else {
+          socket.emit('notconnectack', {connection: "Connected"});
           socket.disconnect();
         }
       }
