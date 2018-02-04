@@ -1,4 +1,5 @@
 require("globals");
+var frameModule =require("ui/frame");
 var SocketIO = require('nativescript-socket.io');
 var accelerometer = require("nativescript-accelerometer");
 var Observable = require("data/observable").Observable;
@@ -10,6 +11,7 @@ var Vibrate = require("nativescript-vibrate").Vibrate;
 var vibrator = new Vibrate();
 
 let socketio = null;
+let params;
 
 let firstPopup = null;
 let d;
@@ -98,6 +100,10 @@ timer.id = setInterval(() => {
 
 function onNavigatingTo(args) {
     var page = args.object;
+    params = page.navigatingContext;
+    console.log("PARAMS : " + params.socket);
+    
+    //console.dir(params);
     page.bindingContext = createViewModel();
     console.log("page-1 ==> navigatingTo");
 }
@@ -149,10 +155,14 @@ function sendCoord(coords) {
     socketio.emit("app:coords", coords);
 }
 
-function createViewModel() {
+function createViewModel(params) {
     var viewModel = new Observable();
     viewModel.counter = 42;
     viewModel.message = getMessage(viewModel.counter);
+
+    console.log("CONNEXTION SOCKET : ")
+    console.dir(params.socket);
+    socketio = params.socket;
 
     firstPopup = null;
     isDead = false;
@@ -184,6 +194,9 @@ function createViewModel() {
         startAccel();
     }
 
+    viewModel.onTapLogout = function() {
+        
+    }
 
     viewModel.onTapStopAccel = function() {
         stopAccel();

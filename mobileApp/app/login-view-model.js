@@ -43,11 +43,11 @@ function createViewModel() {
 
     viewModel.onTap  = function() {
         //console.log(viewModel.username)
+        connect(viewModel.username, viewModel.token);
         var navigationOptions={
             moduleName:'Pages/main-page',
-            /*context:{param1: "value1",
-                    param2: "value2"
-                },*/
+            context:{socket: socketio
+                },
             animated: true,
             transition: {
                 name: "slide",
@@ -56,9 +56,7 @@ function createViewModel() {
             },
             clearHistory: true
         }
-
         frameModule.topmost().navigate(navigationOptions);
-        connect(viewModel.username, viewModel.token);
     }
 
     return viewModel;

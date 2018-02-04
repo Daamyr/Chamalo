@@ -14,6 +14,7 @@ https://docs.nativescript.org/ui/components.
     -->
     <Page.actionBar>
         <ActionBar title="Hackathon 2K18" icon="" class="action-bar">
+            <Button text="Déconnexion" tap="{{ onTapLogout }}" class="btn btn-primary btn-active"/>
         </ActionBar>
     </Page.actionBar>
     <!--

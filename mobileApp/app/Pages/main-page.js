@@ -18,7 +18,10 @@ function onNavigatingTo(args) {
     https://docs.nativescript.org/api-reference/classes/_ui_page_.page.html
     */
     var page = args.object;
-
+    let params;
+    params = page.navigationContext;
+    console.log("PARAMS : " + params.socket);
+    
     /*
     A page’s bindingContext is an object that should be used to perform
     data binding between XML markup and JavaScript code. Properties
@@ -29,7 +32,7 @@ function onNavigatingTo(args) {
     You can learn more about data binding in NativeScript at
     https://docs.nativescript.org/core-concepts/data-binding.
     */
-    page.bindingContext = createViewModel();
+    page.bindingContext = createViewModel(params);
 }
 
 /*
