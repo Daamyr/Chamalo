@@ -73,7 +73,7 @@ function verifyUserConnectRequest(token, username, password, socket) {
         if (gestionnaire.username === username && gestionnaire.password === password) {
           console.log("Added as gestion");
           socket.emit('connectack', {connection: "Connected"});
-          gestionClients.push({id: socket.id});
+          gestionClients.push({id: socket.id, token: token});
           console.log("Gestion connected");
           console.log("Client: " + socket.id);
         } else {
@@ -92,7 +92,7 @@ io.sockets.on('connection',
     let id = socket.handshake.query.id;
     if (id == 1) {
       console.log("Added as mobile");
-      mobileClients.push({id: socket.id});
+      mobileClients.push({id: socket.id, name: username, token: token});
       socket.emit('connectack', {connection: "Connected"});
       console.log("Mobile connected");
       console.log("Client: " + socket.id);
@@ -112,12 +112,18 @@ io.sockets.on('connection',
 
     socket.on('app:coords',
       function(data) {
-        let latitude = data.Latitude;
-        let longitude = data.Longitude;
-        let speed = data.Speed;
-        let direction = data.Direction;
-        let timestamp = data.TimeStamp;
-        console.log("Received: 'test' " + latitude + " " + longitude + " " + speed + " " + direction + " " + timestamp + " " + socket.id);
+        for (mobile of mobileClients) {
+          if (mobile.id == socket.id) {
+            mobile.coords = {};
+            mobile.coords.latitude = data.Latitude
+            mobile.coords.longitude = data.Longitude
+            mobile.speed = data.Speed;
+            mobile.direction = data.Direction;
+            mobile.timestamp = data.TimeStamp;
+            console.log("Received: 'test' " + mobile.coords.latitude + " " + mobile.coords.longitude + " " + mobile.speed + " " + mobile.direction + " " + mobile.timestamp + " " + socket.id);
+          }
+        }
+        console.dir(mobile);
     });
 
     socket.on('forceDisconnect', function(){
@@ -133,11 +139,18 @@ io.sockets.on('connection',
   }
 );
 
-// setInterval(sendCoord, 2500);
+setInterval(sendCoord, 2500);
 function sendCoord() {
-  console.log("Sending Coords");
-  // socket.broadcast.to(token).emit('mouse', data);
-
+  console.log("Sending stuff");
+  for (client of gestionClients) {
+    for (mobile of mobileClients) {
+      if (mobile.token != client.token) {
+        delete mobile;
+      }
+    }
+    io.to(client.token).emit('gestion:coords', mobileClients);
+    // io.to('prod').emit('gestion:coords', mobileClients);
+  }
 }
 
 function allClients2str() {
